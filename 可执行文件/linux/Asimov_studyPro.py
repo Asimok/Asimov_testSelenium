@@ -8,7 +8,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-path = '浏览日志/'
+nowTime = time.strftime('%m-%d', time.localtime(time.time()))
+path = '浏览日志/浏览日志'+str(nowTime)+'/'
 # 阅读文章
 def read_articles(articles_num):
     print("开始阅读文章------总任务" + str(articles_num))
@@ -147,6 +148,9 @@ def get_integralsTemp():
 def checkDir():
     if not os.path.exists("浏览日志"):
         os.mkdir("浏览日志")
+    nowTime = time.strftime('%m-%d', time.localtime(time.time()))
+    if not os.path.exists("浏览日志/浏览日志"+nowTime):
+        os.mkdir("浏览日志/浏览日志"+nowTime)
 
 
 if __name__ == '__main__':
@@ -157,7 +161,7 @@ if __name__ == '__main__':
     option.add_argument('--no-sandbox')
     option.add_argument('--disable-gpu')
     option.add_argument('--disable-dev-shm-usage')
-    myChrome = webdriver.Chrome('./chromedriver',options=option)
+    myChrome = webdriver.Chrome()
     myChrome.get('https://pc.xuexi.cn/points/login.html')
     myChrome.execute_script("var q=document.documentElement.scrollTop=950")
     myChrome.execute_script("var q=document.documentElement.scrollLeft=225")
