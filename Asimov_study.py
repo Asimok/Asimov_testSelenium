@@ -129,7 +129,7 @@ if __name__ == '__main__':
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
-    myChrome = webdriver.Chrome()
+    myChrome = webdriver.Chrome('./chromedriver.exe',chrome_options=option)
     myChrome.get('https://pc.xuexi.cn/points/login.html')
     myChrome.execute_script("var q=document.documentElement.scrollTop=950")
     myChrome.execute_script("var q=document.documentElement.scrollLeft=225")

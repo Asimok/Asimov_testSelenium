@@ -37,35 +37,23 @@ def read_articles(articles_num):
         nowTime = time.strftime('%m-%d_', time.localtime(time.time()))
         myChrome.save_screenshot(path + nowTime + titles[0] + '_' + str(index + 1) + '.png')
         # 模拟滚动
-        # 将滚动条移动到页面的底部
-        jsEnd = "var q=document.documentElement.scrollTop=100000"
-
-        for i in range(0, 4000, 200):
-            # 20*3*2+30 每篇文章130s
-            if i==2000:
-                time.sleep(10)
+        for i in range(0, 5000, 200):
+            # 20*3 每篇文章100s
             js_code = "var q=document.documentElement.scrollTop=" + str(i)
             myChrome.execute_script(js_code)
-            time.sleep(3)
-
+            time.sleep(2)
+        for i in range(5000, 0, -200):
+            js_code = "var q=document.documentElement.scrollTop=" + str(i)
+            myChrome.execute_script(js_code)
+            time.sleep(2)
         time.sleep(2)
-        myChrome.execute_script(jsEnd)
-        time.sleep(10)
-
-        for i in range(4000, 0, -200):
-            if i == 2000:
-                time.sleep(10)
-            js_code = "var q=document.documentElement.scrollTop=" + str(i)
-            myChrome.execute_script(js_code)
-            time.sleep(3)
-        time.sleep(3)
         myChrome.close()
         myChrome.switch_to.window(all_handles[0])
     print("\n阅读文章完毕\n")
 
 
 def watch_videos(videos_num):
-    print("开始观看视频------总任务" + str(3 * videos_num))
+    print("开始观看视频------总任务" + str(2 * videos_num))
     # titles = ['重要活动视频专辑', '学习专题报道', '学习新视界', '十九大报告视频','新闻联播']
     titles = ['重要活动视频专辑', '学习新视界', '新闻联播']
     myChrome.get(
@@ -100,49 +88,33 @@ def watch_videos(videos_num):
             print(video_current_time_str+"   "+str(thistime))
 
             if num==2:
-                print("观看新闻联播")
-
-                if int(3 * videos_num)==int(2 * num + index + 1):
+                if int(2 * videos_num)==int(2 * num + index + 1):
                     #观看到最后一个视频
-                    print("观看新闻联播2")
-                    if allsecond<=19*60:
-                        print("观看时长 " + str(19 * 60 - allsecond + 10))
-                        time.sleep(19*60-allsecond+80)
-                        print("累计时长" + str(allsecond))
+                    if allsecond<=18*60:
+                        time.sleep(18*60-allsecond+10)
                         myChrome.close()
                     else:
-                        print("观看时长 " + str(30))
                         time.sleep(30)
-                        print("累计时长" + str(allsecond))
                         myChrome.close()
                 else:
                     # 新闻联播 6分钟
-                    print("观看新闻联播1")
                     if thistime<360:
-                        print("观看时长 " + str(thistime))
                         time.sleep(thistime)
                         allsecond = allsecond + thistime
-                        print("累计时长" + str(allsecond))
                         myChrome.close()
                     else:
-                        print("观看时长 " + str(360))
                         time.sleep(360)
                         allsecond=allsecond+360
-                        print("累计时长" + str(allsecond))
                         myChrome.close()
             else:
                 # 每个视频观看结束，然后把所有句柄关闭
                 if thistime>190:
-                    print("观看时长 " + str(190))
                     time.sleep(190)
                     allsecond = allsecond + 190
-                    print("累计时长" + str(allsecond))
                     myChrome.close()
                 else:
-                    print("观看时长 " + str(thistime))
                     time.sleep(thistime)
                     allsecond = allsecond + thistime
-                    print("累计时长" + str(allsecond))
                     myChrome.close()
 
             myChrome.switch_to.window(all_handles[0])
@@ -208,14 +180,14 @@ if __name__ == '__main__':
         nowTime = time.strftime('%m-%d_', time.localtime(time.time()))
         myChrome.save_screenshot(path + nowTime + '扫码登陆.png')
         print('登录超时，脚本退出')
-        exit()
+        os._exit()
     # 进入首页
     myChrome.get("https://www.xuexi.cn/")
     myChrome.implicitly_wait(10)
-    get_integralsTemp()  # 获得当前积分
-    read_articles(6)  # 阅读文章 6
+    # get_integralsTemp()  # 获得当前积分
+    # read_articles(8)  # 阅读文章 7
     get_integralsTemp()  # 获得当前积分
     watch_videos(2)  # 观看视频 3分区*2
     get_integrals()  # 获得今日积分
     myChrome.close()
-    exit()
+    os._exit()
