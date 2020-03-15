@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-#coding=utf-8
+# coding=utf-8
 import os
 import random
 import time
@@ -10,7 +10,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 nowTime = time.strftime('%m-%d', time.localtime(time.time()))
-path = '浏览日志/浏览日志'+str(nowTime)+'/'
+path = '浏览日志/浏览日志' + str(nowTime) + '/'
+
+
 # 阅读文章
 def read_articles(articles_num):
     print("开始阅读文章------总任务" + str(articles_num))
@@ -42,7 +44,7 @@ def read_articles(articles_num):
 
         for i in range(0, 4000, 200):
             # 20*3*2+30 每篇文章130s
-            if i==2000:
+            if i == 2000:
                 time.sleep(10)
             js_code = "var q=document.documentElement.scrollTop=" + str(i)
             myChrome.execute_script(js_code)
@@ -71,7 +73,7 @@ def watch_videos(videos_num):
     myChrome.get(
         'https://www.xuexi.cn/4426aa87b0b64ac671c96379a3a8bd26/db086044562a57b441c24f2af1c8e101.html')
     myChrome.implicitly_wait(10)
-    allsecond=0
+    allsecond = 0
     for num, title in enumerate(titles):
         myChrome.find_elements_by_xpath("//*[contains(text(), '" + title + "')]")[0].click()
         time.sleep(2)
@@ -91,34 +93,37 @@ def watch_videos(videos_num):
             myChrome.find_element_by_xpath("//div[@class='outter']").click()
             time.sleep(3)
             nowTime = time.strftime('%m-%d_', time.localtime(time.time()))
-            myChrome.save_screenshot(path + nowTime + titles[num] + '_' +str(2 * num + index + 1) + '.png')
+            myChrome.save_screenshot(path + nowTime + titles[num] + '_' + str(2 * num + index + 1) + '.png')
 
             # 可以获取视频当前时长
             video_current_time_str = myChrome.find_element_by_xpath(
                 "//span[@class='duration']").get_attribute('innerText')
-            thistime = int(video_current_time_str[0:video_current_time_str.index(':')]) * 60 + int(video_current_time_str[video_current_time_str.index(':') + 1:])
-            print(video_current_time_str+"   "+str(thistime))
+            thistime = int(video_current_time_str[0:video_current_time_str.index(':')]) * 60 + int(
+                video_current_time_str[video_current_time_str.index(':') + 1:])
+            print(video_current_time_str + "   " + str(thistime))
 
-            if num==2:
+            if num == 2:
                 print("观看新闻联播")
 
-                if int(3 * videos_num)==int(2 * num + index + 1):
-                    #观看到最后一个视频
+                if int(3 * videos_num) == int(2 * num + index + 1):
+                    # 观看到最后一个视频
                     print("观看新闻联播2")
-                    if allsecond<=19*60:
+                    if allsecond <= 19 * 60:
                         print("观看时长 " + str(19 * 60 - allsecond + 10))
-                        time.sleep(19*60-allsecond+80)
+                        time.sleep(19 * 60 - allsecond + 80)
+                        allsecond = allsecond + (19 * 60 - allsecond + 80)
                         print("累计时长" + str(allsecond))
                         myChrome.close()
                     else:
                         print("观看时长 " + str(30))
                         time.sleep(30)
+                        allsecond = allsecond + 30
                         print("累计时长" + str(allsecond))
                         myChrome.close()
                 else:
                     # 新闻联播 6分钟
                     print("观看新闻联播1")
-                    if thistime<360:
+                    if thistime < 360:
                         print("观看时长 " + str(thistime))
                         time.sleep(thistime)
                         allsecond = allsecond + thistime
@@ -127,12 +132,12 @@ def watch_videos(videos_num):
                     else:
                         print("观看时长 " + str(360))
                         time.sleep(360)
-                        allsecond=allsecond+360
+                        allsecond = allsecond + 360
                         print("累计时长" + str(allsecond))
                         myChrome.close()
             else:
                 # 每个视频观看结束，然后把所有句柄关闭
-                if thistime>190:
+                if thistime > 190:
                     print("观看时长 " + str(190))
                     time.sleep(190)
                     allsecond = allsecond + 190
@@ -146,7 +151,11 @@ def watch_videos(videos_num):
                     myChrome.close()
 
             myChrome.switch_to.window(all_handles[0])
+
+    m, s = divmod(allsecond, 60)
+    print("播放视频%02d:%02d分钟" % (m, s))
     print("\n播放视频完毕\n")
+
 
 def get_integrals():
     # 获取当前积分
@@ -178,15 +187,15 @@ def checkDir():
     if not os.path.exists("浏览日志"):
         os.mkdir("浏览日志")
     nowTime = time.strftime('%m-%d', time.localtime(time.time()))
-    if not os.path.exists("浏览日志/浏览日志"+nowTime):
-        os.mkdir("浏览日志/浏览日志"+nowTime)
+    if not os.path.exists("浏览日志/浏览日志" + nowTime):
+        os.mkdir("浏览日志/浏览日志" + nowTime)
 
 
 if __name__ == '__main__':
     checkDir()
     option = webdriver.ChromeOptions()
     option.add_argument('disable-infobars')
-    #option.add_argument('--headless')
+    # option.add_argument('--headless')
     option.add_argument('--no-sandbox')
     option.add_argument('--disable-gpu')
     option.add_argument('--disable-dev-shm-usage')
